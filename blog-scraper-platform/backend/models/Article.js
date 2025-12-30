@@ -54,7 +54,7 @@ const articleSchema = new mongoose.Schema({
     default: true
   }
 }, {
-  timestamps: true, // Automatically adds createdAt and updatedAt
+  timestamps: true,
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
 });
@@ -62,22 +62,21 @@ const articleSchema = new mongoose.Schema({
 // Indexes for faster queries
 articleSchema.index({ type: 1, createdAt: -1 });
 articleSchema.index({ sourceUrl: 1 });
-articleSchema.index({ title: 'text', content: 'text' }); // Text search index
+articleSchema.index({ title: 'text', content: 'text' });
 articleSchema.index({ isActive: 1 });
 
-// Virtual field to calculate reading time (average 200 words per minute)
+// Virtual field to calculate reading time
 articleSchema.virtual('readingTime').get(function() {
   if (!this.content) return 0;
   const words = this.content.split(/\s+/).length;
   return Math.ceil(words / 200);
 });
 
-// Pre-save middleware to calculate word count
-articleSchema.pre('save', function(next) {
+// Pre-save middleware to calculate word count (async version)
+articleSchema.pre('save', async function() {
   if (this.content) {
     this.wordCount = this.content.split(/\s+/).filter(word => word.length > 0).length;
   }
-  next();
 });
 
 // Static method to find articles by type
@@ -101,7 +100,7 @@ articleSchema.methods.getSummary = function(maxLength = 200) {
   return this.content.substring(0, maxLength).trim() + '...';
 };
 
-// Instance method to mark as inactive (soft delete)
+// Instance method to mark as inactive
 articleSchema.methods.softDelete = function() {
   this.isActive = false;
   return this.save();

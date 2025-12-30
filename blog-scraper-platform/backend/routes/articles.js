@@ -115,7 +115,7 @@ router.get('/:id', async (req, res) => {
 // ============================================
 // CREATE NEW ARTICLE
 // ============================================
-router.post('/', async (req, res) => {
+/*router.post('/', async (req, res) => {
   try {
     const { title, content, sourceUrl, references, type, publishedDate } = req.body;
     
@@ -144,6 +144,82 @@ router.post('/', async (req, res) => {
           title: existingArticle.title
         }
       });
+    }
+    
+    // Create new article
+    const article = new Article({
+      title,
+      content,
+      sourceUrl,
+      references: references || [],
+      type: type || 'original',
+      publishedDate: publishedDate || null
+    });
+    
+    await article.save();
+    
+    console.log(`✅ Article created: ${article.title}`);
+    
+    res.status(201).json({ 
+      success: true, 
+      data: article,
+      message: 'Article created successfully'
+    });
+  } catch (error) {
+    console.error('❌ Error creating article:', error);
+    
+    // Handle validation errors
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({
+        success: false,
+        error: 'Validation failed',
+        message: messages.join(', '),
+        details: error.errors
+      });
+    }
+    
+    res.status(400).json({ 
+      success: false, 
+      error: 'Failed to create article',
+      message: error.message 
+    });
+  }
+});*/
+
+router.post('/', async (req, res) => {
+  try {
+    const { title, content, sourceUrl, references, type, publishedDate } = req.body;
+    
+    // Validate required fields
+    if (!title || !content || !sourceUrl) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required fields',
+        message: 'title, content, and sourceUrl are required'
+      });
+    }
+    
+    // Check for duplicate sourceUrl ONLY for 'original' type articles
+    // Allow 'updated' articles to have the same sourceUrl
+    if (type === 'original' || !type) {
+      const existingArticle = await Article.findOne({ 
+        sourceUrl,
+        type: 'original',
+        isActive: true 
+      });
+      
+      if (existingArticle) {
+        return res.status(409).json({
+          success: false,
+          error: 'Duplicate article',
+          message: 'An article with this source URL already exists',
+          existingArticle: {
+            id: existingArticle._id,
+            title: existingArticle.title
+          }
+        });
+      }
     }
     
     // Create new article

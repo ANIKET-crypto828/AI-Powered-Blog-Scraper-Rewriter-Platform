@@ -17,7 +17,7 @@ function Header() {
                 Blog Rewriter AI
               </h1>
               <p className="text-xs text-gray-500">
-                Powered by OpenAI GPT-4
+                Powered by llama-3.1-8b
               </p>
             </div>
           </Link>
