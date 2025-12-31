@@ -29,14 +29,14 @@ function Header() {
             >
               Articles
             </Link>
-            <a 
+            {/**<a 
               href={`${import.meta.env.VITE_API_URL?.replace('/api', '')}/health`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200"
             >
               API Status
-            </a>
+            </a>**/}
             <a
               href="https://github.com"
               target="_blank"

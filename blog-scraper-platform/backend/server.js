@@ -1,4 +1,3 @@
-// server.js - Main Express Server
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
