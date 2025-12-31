@@ -1,4 +1,3 @@
-// backend/routes/scraper.js
 const express = require('express');
 const router = express.Router();
 const { 
@@ -14,13 +13,13 @@ const Article = require('../models/Article');
 router.post('/scrape-oldest', async (req, res) => {
   try {
     console.log('\n' + '='.repeat(60));
-    console.log('🚀 SCRAPING OLDEST ARTICLES');
+    console.log(' SCRAPING OLDEST ARTICLES');
     console.log('='.repeat(60));
     
     const articles = await scrapeOldestArticles();
     
     if (!articles || articles.length === 0) {
-      console.log('❌ No articles were scraped');
+      console.log(' No articles were scraped');
       return res.status(404).json({
         success: false,
         message: 'No articles found. The website structure may have changed.',
@@ -29,7 +28,7 @@ router.post('/scrape-oldest', async (req, res) => {
     }
     
     console.log('\n' + '='.repeat(60));
-    console.log(`✅ SCRAPING COMPLETE - ${articles.length} articles processed`);
+    console.log(` SCRAPING COMPLETE - ${articles.length} articles processed`);
     console.log('='.repeat(60) + '\n');
     
     res.json({
@@ -42,7 +41,7 @@ router.post('/scrape-oldest', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('\n❌ SCRAPING FAILED:', error.message);
+    console.error('\n SCRAPING FAILED:', error.message);
     res.status(500).json({
       success: false,
       error: 'Scraping failed',
@@ -67,7 +66,7 @@ router.post('/scrape-page', async (req, res) => {
       });
     }
     
-    console.log(`\n🔄 Scraping page ${pageNumber}...`);
+    console.log(`\n Scraping page ${pageNumber}...`);
     
     const articles = await scrapeArticlesByPage(pageNumber);
     
@@ -79,7 +78,7 @@ router.post('/scrape-page', async (req, res) => {
       });
     }
     
-    console.log(`✅ Page ${pageNumber} complete - ${articles.length} articles\n`);
+    console.log(` Page ${pageNumber} complete - ${articles.length} articles\n`);
     
     res.json({
       success: true,
@@ -92,7 +91,7 @@ router.post('/scrape-page', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('❌ Page scraping error:', error.message);
+    console.error(' Page scraping error:', error.message);
     res.status(500).json({
       success: false,
       error: 'Page scraping failed',
@@ -106,11 +105,11 @@ router.post('/scrape-page', async (req, res) => {
 // ============================================
 router.get('/test', async (req, res) => {
   try {
-    console.log('\n🧪 Testing scraping functionality...\n');
+    console.log('\n Testing scraping functionality...\n');
     
     const result = await testScraping();
     
-    console.log('✅ Test complete\n');
+    console.log(' Test complete\n');
     
     res.json({
       success: true,
@@ -118,7 +117,7 @@ router.get('/test', async (req, res) => {
       data: result
     });
   } catch (error) {
-    console.error('❌ Test failed:', error.message);
+    console.error(' Test failed:', error.message);
     res.status(500).json({
       success: false,
       error: 'Test scraping failed',
@@ -175,7 +174,7 @@ router.get('/status', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('❌ Error fetching status:', error.message);
+    console.error(' Error fetching status:', error.message);
     res.status(500).json({
       success: false,
       error: 'Failed to fetch scraping status',
@@ -210,7 +209,7 @@ router.post('/scrape-batch', async (req, res) => {
     }
     
     console.log(`\n${'='.repeat(60)}`);
-    console.log(`🔄 BATCH SCRAPING - Pages ${startPage} to ${endPage}`);
+    console.log(` BATCH SCRAPING - Pages ${startPage} to ${endPage}`);
     console.log('='.repeat(60) + '\n');
     
     const allArticles = [];
@@ -219,18 +218,18 @@ router.post('/scrape-batch', async (req, res) => {
     // Scrape each page in sequence
     for (let page = startPage; page <= endPage; page++) {
       try {
-        console.log(`\n📄 Scraping page ${page}/${endPage}...`);
+        console.log(`\n Scraping page ${page}/${endPage}...`);
         const articles = await scrapeArticlesByPage(page);
         allArticles.push(...articles);
-        console.log(`✅ Page ${page} complete - ${articles.length} articles`);
+        console.log(` Page ${page} complete - ${articles.length} articles`);
         
         // Delay between pages to be respectful
         if (page < endPage) {
-          console.log('⏳ Waiting 3 seconds before next page...');
+          console.log(' Waiting 3 seconds before next page...');
           await new Promise(resolve => setTimeout(resolve, 3000));
         }
       } catch (error) {
-        console.error(`❌ Error on page ${page}:`, error.message);
+        console.error(` Error on page ${page}:`, error.message);
         errors.push({ 
           page, 
           error: error.message 
@@ -239,7 +238,7 @@ router.post('/scrape-batch', async (req, res) => {
     }
     
     console.log(`\n${'='.repeat(60)}`);
-    console.log(`✅ BATCH COMPLETE - ${allArticles.length} total articles`);
+    console.log(` BATCH COMPLETE - ${allArticles.length} total articles`);
     console.log('='.repeat(60) + '\n');
     
     res.json({
@@ -254,7 +253,7 @@ router.post('/scrape-batch', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('❌ Batch scraping error:', error.message);
+    console.error(' Batch scraping error:', error.message);
     res.status(500).json({
       success: false,
       error: 'Batch scraping failed',
@@ -281,7 +280,7 @@ router.delete('/clear-scraped', async (req, res) => {
     
     const result = await Article.deleteMany({ type: 'original' });
     
-    console.log(`🗑️  Deleted ${result.deletedCount} scraped articles`);
+    console.log(`  Deleted ${result.deletedCount} scraped articles`);
     
     res.json({
       success: true,
@@ -291,7 +290,7 @@ router.delete('/clear-scraped', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('❌ Error clearing scraped articles:', error.message);
+    console.error(' Error clearing scraped articles:', error.message);
     res.status(500).json({
       success: false,
       error: 'Failed to clear scraped articles',

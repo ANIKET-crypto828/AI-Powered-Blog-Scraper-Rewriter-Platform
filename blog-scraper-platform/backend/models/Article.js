@@ -1,4 +1,3 @@
-// backend/models/Article.js
 const mongoose = require('mongoose');
 
 const articleSchema = new mongoose.Schema({

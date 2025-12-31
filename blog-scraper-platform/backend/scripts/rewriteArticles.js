@@ -1,9 +1,8 @@
-// scripts/rewriteArticles.js - AI-Powered Article Rewriting (Updated Models)
 require('dotenv').config();
 const axios = require('axios');
 const cheerio = require('cheerio');
 
-const API_BASE = process.env.API_BASE_URL || 'http://localhost:5000/api';
+const API_BASE = process.env.API_BASE_URL || 'https://ai-powered-blog-scraper-rewriter-platform.onrender.com/api';
 const SERPER_API_KEY = process.env.SERPER_API_KEY;
 
 // Configure which AI model to use
@@ -56,17 +55,17 @@ async function fetchOriginalArticles() {
       }
     });
     
-    console.log(`✅ API Response received`);
-    console.log(`📊 Total articles: ${data.data?.length || 0}`);
+    console.log(` API Response received`);
+    console.log(` Total articles: ${data.data?.length || 0}`);
     
     if (data.success && data.data) {
       return data.data;
     }
     
-    console.warn('⚠️ API returned success but no data array');
+    console.warn(' API returned success but no data array');
     return [];
   } catch (error) {
-    console.error('\n❌ Error fetching articles:');
+    console.error('\n Error fetching articles:');
     console.error('Error Type:', error.constructor.name);
     console.error('Message:', error.message);
     
@@ -87,7 +86,7 @@ async function fetchOriginalArticles() {
 async function searchGoogleForArticle(title) {
   try {
     if (!SERPER_API_KEY) {
-      console.warn('⚠️ SERPER_API_KEY not set, skipping Google search');
+      console.warn(' SERPER_API_KEY not set, skipping Google search');
       return [];
     }
     
@@ -153,7 +152,7 @@ async function rewriteWithRetry(original, references, referenceUrls, maxRetries 
         const waitTime = error.response?.data?.error?.message?.match(/(\d+\.?\d*)\s*s/)?.[1];
         const delay = waitTime ? parseFloat(waitTime) * 1000 + 1000 : 10000; // Add 1s buffer
         
-        console.log(`⏳ Rate limit hit. Waiting ${(delay/1000).toFixed(1)}s before retry ${attempt}/${maxRetries}...`);
+        console.log(` Rate limit hit. Waiting ${(delay/1000).toFixed(1)}s before retry ${attempt}/${maxRetries}...`);
         
         if (attempt < maxRetries) {
           await new Promise(resolve => setTimeout(resolve, delay));
@@ -293,39 +292,39 @@ async function publishUpdatedArticle(originalId, updatedContent, references) {
 
 /*async function processArticle(article) {
   console.log(`\n${'='.repeat(60)}`);
-  console.log(`📝 Processing: ${article.title}`);
+  console.log(` Processing: ${article.title}`);
   console.log(`${'='.repeat(60)}`);
   
   try {
     // Step 1: Search Google
-    console.log('🔍 Searching Google for reference articles...');
+    console.log(' Searching Google for reference articles...');
     const referenceUrls = await searchGoogleForArticle(article.title);
-    console.log(`✅ Found ${referenceUrls.length} reference URLs`);
+    console.log(` Found ${referenceUrls.length} reference URLs`);
     
     if (referenceUrls.length === 0) {
-      console.log('⚠️ No references found, skipping...');
+      console.log(' No references found, skipping...');
       return null;
     }
     
     // Step 2: Scrape references
-    console.log('📄 Scraping reference content...');
+    console.log(' Scraping reference content...');
     const referenceContents = await Promise.all(
       referenceUrls.map(url => scrapeReferenceContent(url))
     );
     const validReferences = referenceContents.filter(c => c.length > 100);
-    console.log(`✅ Scraped ${validReferences.length} valid references`);
+    console.log(` Scraped ${validReferences.length} valid references`);
     
     // Step 3: Rewrite with AI
-    console.log('🤖 Rewriting article with AI...');
+    console.log(' Rewriting article with AI...');
     const rewrittenContent = await rewriteArticleWithAI(
       article,
       validReferences,
       referenceUrls
     );
-    console.log('✅ Article rewritten successfully');
+    console.log(' Article rewritten successfully');
     
     // Step 4: Publish
-    console.log('📤 Publishing updated article...');
+    console.log(' Publishing updated article...');
     const published = await publishUpdatedArticle(
       article._id,
       {
@@ -335,50 +334,50 @@ async function publishUpdatedArticle(originalId, updatedContent, references) {
       },
       referenceUrls
     );
-    console.log(`✅ Published: ${published.title}`);
+    console.log(` Published: ${published.title}`);
     
     return published;
   } catch (error) {
-    console.error(`❌ Error processing article: ${error.message}`);
+    console.error(` Error processing article: ${error.message}`);
     return null;
   }
 }*/
 
 async function processArticle(article) {
   console.log(`\n${'='.repeat(60)}`);
-  console.log(`📝 Processing: ${article.title}`);
+  console.log(` Processing: ${article.title}`);
   console.log(`${'='.repeat(60)}`);
   
   try {
     // Step 1: Search Google
-    console.log('🔍 Searching Google for reference articles...');
+    console.log(' Searching Google for reference articles...');
     const referenceUrls = await searchGoogleForArticle(article.title);
-    console.log(`✅ Found ${referenceUrls.length} reference URLs`);
+    console.log(` Found ${referenceUrls.length} reference URLs`);
     
     if (referenceUrls.length === 0) {
-      console.log('⚠️ No references found, skipping...');
+      console.log(' No references found, skipping...');
       return null;
     }
     
     // Step 2: Scrape references
-    console.log('📄 Scraping reference content...');
+    console.log(' Scraping reference content...');
     const referenceContents = await Promise.all(
       referenceUrls.map(url => scrapeReferenceContent(url))
     );
     const validReferences = referenceContents.filter(c => c.length > 100);
-    console.log(`✅ Scraped ${validReferences.length} valid references`);
+    console.log(` Scraped ${validReferences.length} valid references`);
     
     // Step 3: Rewrite with AI (with retry logic)
-    console.log('🤖 Rewriting article with AI...');
+    console.log(' Rewriting article with AI...');
     const rewrittenContent = await rewriteWithRetry(
       article,
       validReferences,
       referenceUrls
     );
-    console.log('✅ Article rewritten successfully');
+    console.log(' Article rewritten successfully');
     
     // Step 4: Publish
-    console.log('📤 Publishing updated article...');
+    console.log(' Publishing updated article...');
     const published = await publishUpdatedArticle(
       article._id,
       {
@@ -388,11 +387,11 @@ async function processArticle(article) {
       },
       referenceUrls
     );
-    console.log(`✅ Published: ${published.title}`);
+    console.log(` Published: ${published.title}`);
     
     return published;
   } catch (error) {
-    console.error(`❌ Error processing article: ${error.message}`);
+    console.error(` Error processing article: ${error.message}`);
     return null;
   }
 }
@@ -403,10 +402,10 @@ async function checkBackendConnection() {
     console.log('\n🔌 Checking backend connection...');
     const healthUrl = API_BASE.replace('/api', '/health');
     const { data } = await axios.get(healthUrl, { timeout: 5000 });
-    console.log('✅ Backend is running:', data);
+    console.log(' Backend is running:', data);
     return true;
   } catch (error) {
-    console.error('❌ Cannot connect to backend!');
+    console.error(' Cannot connect to backend!');
     console.error('   Make sure your backend is running on:', API_BASE);
     console.error('   Start it with: npm run dev');
     return false;
@@ -414,29 +413,29 @@ async function checkBackendConnection() {
 }
 
 async function main() {
-  console.log('🚀 Starting AI Article Rewriting Pipeline');
-  console.log(`📡 Provider: ${AI_PROVIDER.toUpperCase()}`);
-  console.log(`🤖 Model: ${AI_MODEL}`);
-  console.log(`🌐 API Base: ${API_BASE}`);
+  console.log(' Starting AI Article Rewriting Pipeline');
+  console.log(` Provider: ${AI_PROVIDER.toUpperCase()}`);
+  console.log(` Model: ${AI_MODEL}`);
+  console.log(` API Base: ${API_BASE}`);
   
   // Check backend connection first
   const backendConnected = await checkBackendConnection();
   if (!backendConnected) {
-    console.log('\n⚠️ Please start your backend server first!');
+    console.log('\n Please start your backend server first!');
     console.log('   Run: npm run dev (in the backend directory)');
     return;
   }
   
   // Fetch original articles
   const articles = await fetchOriginalArticles();
-  console.log(`📚 Found ${articles.length} original articles\n`);
+  console.log(` Found ${articles.length} original articles\n`);
   
   if (articles.length === 0) {
-    console.log('\n⚠️ No original articles found in database!');
-    console.log('\n📋 To fix this, run the scraper first:');
-    console.log('   1. POST to http://localhost:5000/api/scraper/scrape-oldest');
-    console.log('   2. Or use: curl -X POST http://localhost:5000/api/scraper/scrape-oldest');
-    console.log('\n💡 You can also run scraping from your frontend or API testing tool.');
+    console.log('\n No original articles found in database!');
+    console.log('\n To fix this, run the scraper first:');
+    console.log('   1. POST to https://ai-powered-blog-scraper-rewriter-platform.onrender.com/api/scraper/scrape-oldest');
+    console.log('   2. Or use: curl -X POST https://ai-powered-blog-scraper-rewriter-platform.onrender.com/api/scraper/scrape-oldest');
+    console.log('\n You can also run scraping from your frontend or API testing tool.');
     return;
   }
   
@@ -451,15 +450,15 @@ async function main() {
   }
   
   console.log(`\n${'='.repeat(60)}`);
-  console.log(`✅ Pipeline Complete!`);
-  console.log(`📊 Processed: ${results.length}/${articles.length} articles`);
+  console.log(` Pipeline Complete!`);
+  console.log(` Processed: ${results.length}/${articles.length} articles`);
   console.log(`${'='.repeat(60)}`);
 }
 
 // Run if called directly
 if (require.main === module) {
   main().catch(error => {
-    console.error('\n💥 Fatal Error:', error);
+    console.error('\n Fatal Error:', error);
     process.exit(1);
   });
 }

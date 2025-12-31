@@ -1,4 +1,3 @@
-// backend/services/scraperService.js - Web Scraping Business Logic
 const axios = require('axios');
 const cheerio = require('cheerio');
 const Article = require('../models/Article');
@@ -15,7 +14,7 @@ const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
  */
 async function getLastPageNumber() {
   try {
-    console.log('🔍 Finding last page number...');
+    console.log(' Finding last page number...');
     const { data } = await axios.get(BASE_URL, {
       headers: { 'User-Agent': USER_AGENT },
       timeout: REQUEST_TIMEOUT
@@ -58,7 +57,7 @@ async function getLastPageNumber() {
     }
     
     const lastPage = pageNumbers.length > 0 ? Math.max(...pageNumbers) : 1;
-    console.log(`📄 Last page number: ${lastPage}`);
+    console.log(` Last page number: ${lastPage}`);
     
     return lastPage;
   } catch (error) {
@@ -72,7 +71,7 @@ async function getLastPageNumber() {
  */
 async function scrapeArticlesFromPage(pageUrl) {
   try {
-    console.log(`🌐 Scraping: ${pageUrl}`);
+    console.log(` Scraping: ${pageUrl}`);
     
     const { data } = await axios.get(pageUrl, {
       headers: { 'User-Agent': USER_AGENT },
@@ -98,7 +97,7 @@ async function scrapeArticlesFromPage(pageUrl) {
       const elements = $(selector);
       
       if (elements.length > 0) {
-        console.log(`✅ Found ${elements.length} articles using selector: ${selector}`);
+        console.log(` Found ${elements.length} articles using selector: ${selector}`);
         
         elements.each((i, elem) => {
           // Try to extract title
@@ -167,7 +166,7 @@ async function scrapeArticlesFromPage(pageUrl) {
     }
     
     if (!foundArticles) {
-      console.log('⚠️  No articles found with standard selectors. Trying fallback...');
+      console.log('  No articles found with standard selectors. Trying fallback...');
       
       // Fallback: Find all links and filter by URL pattern
       $('a').each((i, elem) => {
@@ -191,7 +190,7 @@ async function scrapeArticlesFromPage(pageUrl) {
       });
     }
     
-    console.log(`📰 Found ${articles.length} article links`);
+    console.log(` Found ${articles.length} article links`);
     return articles;
   } catch (error) {
     console.error('Error scraping page:', error.message);
@@ -204,7 +203,7 @@ async function scrapeArticlesFromPage(pageUrl) {
  */
 async function scrapeArticleContent(url) {
   try {
-    console.log(`📖 Scraping content from: ${url}`);
+    console.log(` Scraping content from: ${url}`);
     
     const { data } = await axios.get(url, {
       headers: { 'User-Agent': USER_AGENT },
@@ -253,11 +252,11 @@ async function scrapeArticleContent(url) {
       .substring(0, 50000); // Limit to 50k characters
     
     if (!content || content.length < 100) {
-      console.log('⚠️  Content extraction yielded minimal text');
+      console.log('  Content extraction yielded minimal text');
       return 'Content could not be properly extracted from the source.';
     }
     
-    console.log(`✅ Extracted ${content.length} characters`);
+    console.log(` Extracted ${content.length} characters`);
     return content;
   } catch (error) {
     console.error(`Error scraping content from ${url}:`, error.message);
@@ -270,36 +269,36 @@ async function scrapeArticleContent(url) {
  */
 async function scrapeOldestArticles() {
   try {
-    console.log('🚀 Starting scraping process for oldest articles...');
+    console.log(' Starting scraping process for oldest articles...');
     
     // Find the last page
     const lastPage = await getLastPageNumber();
     const lastPageUrl = lastPage > 1 ? `${BASE_URL}?page=${lastPage}` : BASE_URL;
     
-    console.log(`🔍 Scraping last page: ${lastPageUrl}`);
+    console.log(` Scraping last page: ${lastPageUrl}`);
     
     // Get article links from the last page
     const articleLinks = await scrapeArticlesFromPage(lastPageUrl);
     
     if (articleLinks.length === 0) {
-      console.log('❌ No articles found on the last page');
+      console.log(' No articles found on the last page');
       return [];
     }
     
-    console.log(`✅ Found ${articleLinks.length} article links`);
+    console.log(` Found ${articleLinks.length} article links`);
     
     // Take only the first 5 (assuming they're the oldest)
     const oldestFive = articleLinks.slice(0, 5);
     const scrapedArticles = [];
     
     for (const [index, link] of oldestFive.entries()) {
-      console.log(`\n📰 [${index + 1}/5] Processing: ${link.title}`);
+      console.log(`\n [${index + 1}/5] Processing: ${link.title}`);
       
       // Check if article already exists
       const existingArticle = await Article.findOne({ sourceUrl: link.url });
       
       if (existingArticle) {
-        console.log(`⏭️  Article already exists in database`);
+        console.log(`  Article already exists in database`);
         scrapedArticles.push(existingArticle);
         continue;
       }
@@ -319,21 +318,21 @@ async function scrapeOldestArticles() {
       await article.save();
       scrapedArticles.push(article);
       
-      console.log(`✅ Saved article: ${link.title}`);
+      console.log(` Saved article: ${link.title}`);
       console.log(`   Word count: ${article.wordCount}`);
       console.log(`   Reading time: ${article.readingTime} min`);
       
       // Respectful delay between requests
       if (index < oldestFive.length - 1) {
-        console.log(`⏳ Waiting ${DELAY_BETWEEN_REQUESTS}ms before next request...`);
+        console.log(` Waiting ${DELAY_BETWEEN_REQUESTS}ms before next request...`);
         await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_REQUESTS));
       }
     }
     
-    console.log(`\n✅ Scraping complete! Processed ${scrapedArticles.length} articles`);
+    console.log(`\n Scraping complete! Processed ${scrapedArticles.length} articles`);
     return scrapedArticles;
   } catch (error) {
-    console.error('❌ Scraping failed:', error);
+    console.error(' Scraping failed:', error);
     throw error;
   }
 }
@@ -353,12 +352,12 @@ async function scrapeArticlesByPage(pageNumber) {
     const scrapedArticles = [];
     
     for (const [index, link] of articleLinks.entries()) {
-      console.log(`\n📰 [${index + 1}/${articleLinks.length}] Processing: ${link.title}`);
+      console.log(`\n [${index + 1}/${articleLinks.length}] Processing: ${link.title}`);
       
       // Check if exists
       const existingArticle = await Article.findOne({ sourceUrl: link.url });
       if (existingArticle) {
-        console.log(`⏭️  Already exists`);
+        console.log(`  Already exists`);
         scrapedArticles.push(existingArticle);
         continue;
       }
@@ -378,7 +377,7 @@ async function scrapeArticlesByPage(pageNumber) {
       await article.save();
       scrapedArticles.push(article);
       
-      console.log(`✅ Saved: ${link.title}`);
+      console.log(` Saved: ${link.title}`);
       
       // Delay
       if (index < articleLinks.length - 1) {
@@ -398,7 +397,7 @@ async function scrapeArticlesByPage(pageNumber) {
  */
 async function testScraping() {
   try {
-    console.log('🧪 Testing scraping functionality...');
+    console.log(' Testing scraping functionality...');
     
     const lastPage = await getLastPageNumber();
     const testPageUrl = `${BASE_URL}?page=${lastPage}`;
@@ -407,7 +406,7 @@ async function testScraping() {
     
     if (articleLinks.length > 0) {
       const testArticle = articleLinks[0];
-      console.log('📝 Testing content extraction on first article...');
+      console.log(' Testing content extraction on first article...');
       const content = await scrapeArticleContent(testArticle.url);
       
       return {

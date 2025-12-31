@@ -1,4 +1,3 @@
-// backend/routes/articles.js
 const express = require('express');
 const router = express.Router();
 const Article = require('../models/Article');
@@ -56,7 +55,7 @@ router.get('/', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('❌ Error fetching articles:', error);
+    console.error(' Error fetching articles:', error);
     res.status(500).json({ 
       success: false, 
       error: 'Failed to fetch articles',
@@ -93,7 +92,7 @@ router.get('/:id', async (req, res) => {
       data: article
     });
   } catch (error) {
-    console.error('❌ Error fetching article:', error);
+    console.error(' Error fetching article:', error);
     
     // Handle invalid MongoDB ObjectId
     if (error.kind === 'ObjectId') {
@@ -158,7 +157,7 @@ router.get('/:id', async (req, res) => {
     
     await article.save();
     
-    console.log(`✅ Article created: ${article.title}`);
+    console.log(` Article created: ${article.title}`);
     
     res.status(201).json({ 
       success: true, 
@@ -166,7 +165,7 @@ router.get('/:id', async (req, res) => {
       message: 'Article created successfully'
     });
   } catch (error) {
-    console.error('❌ Error creating article:', error);
+    console.error(' Error creating article:', error);
     
     // Handle validation errors
     if (error.name === 'ValidationError') {
@@ -234,7 +233,7 @@ router.post('/', async (req, res) => {
     
     await article.save();
     
-    console.log(`✅ Article created: ${article.title}`);
+    console.log(` Article created: ${article.title}`);
     
     res.status(201).json({ 
       success: true, 
@@ -242,7 +241,7 @@ router.post('/', async (req, res) => {
       message: 'Article created successfully'
     });
   } catch (error) {
-    console.error('❌ Error creating article:', error);
+    console.error(' Error creating article:', error);
     
     // Handle validation errors
     if (error.name === 'ValidationError') {
@@ -304,7 +303,7 @@ router.put('/:id', async (req, res) => {
       });
     }
     
-    console.log(`✅ Article updated: ${article.title}`);
+    console.log(` Article updated: ${article.title}`);
     
     res.json({ 
       success: true, 
@@ -312,7 +311,7 @@ router.put('/:id', async (req, res) => {
       message: 'Article updated successfully'
     });
   } catch (error) {
-    console.error('❌ Error updating article:', error);
+    console.error(' Error updating article:', error);
     
     // Handle validation errors
     if (error.name === 'ValidationError') {
@@ -360,7 +359,7 @@ router.delete('/:id', async (req, res) => {
     article.isActive = false;
     await article.save();
     
-    console.log(`🗑️  Article soft deleted: ${article.title}`);
+    console.log(`  Article soft deleted: ${article.title}`);
     
     res.json({ 
       success: true, 
@@ -371,7 +370,7 @@ router.delete('/:id', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('❌ Error deleting article:', error);
+    console.error(' Error deleting article:', error);
     
     // Handle invalid ObjectId
     if (error.kind === 'ObjectId') {
@@ -419,7 +418,7 @@ router.get('/stats/summary', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('❌ Error fetching statistics:', error);
+    console.error(' Error fetching statistics:', error);
     res.status(500).json({
       success: false,
       error: 'Failed to fetch statistics',

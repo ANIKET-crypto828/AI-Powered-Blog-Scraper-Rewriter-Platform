@@ -1,4 +1,3 @@
-// frontend/src/components/Header.jsx
 import { Link } from 'react-router-dom';
 import { Sparkles } from 'lucide-react';
 

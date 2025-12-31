@@ -1,10 +1,10 @@
-// src/components/ArticleDetail.jsx
+
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ExternalLink, Calendar, RefreshCw, Link2 } from 'lucide-react';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://ai-powered-blog-scraper-rewriter-platform.onrender.com/api';
 
 function ArticleDetail() {
   const { id } = useParams();
