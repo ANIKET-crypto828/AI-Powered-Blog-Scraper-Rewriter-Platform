@@ -122,8 +122,8 @@ An intelligent content management system that scrapes articles from BeyondChats 
 
 ### 1️⃣ Clone Repository
 ```bash
-git clone <your-repo-url>
-cd ai-blog-scraper-rewriter
+git clone "https://github.com/ANIKET-crypto828/AI-Powered-Blog-Scraper-Rewriter-Platform"
+cd blog-scraper-platform
 ```
 
 ### 2️⃣ Backend Setup
@@ -160,7 +160,7 @@ Backend runs on `http://localhost:5000`
 
 ### 3️⃣ Frontend Setup
 ```bash
-cd frontend
+cd frontend/client
 npm install
 ```
 
@@ -323,7 +323,7 @@ npm run rewrite
 ## 📁 Project Structure
 
 ```
-ai-blog-scraper-rewriter/
+blog-scraper-platform/
 ├── backend/
 │   ├── models/
 │   │   └── Article.js              # Mongoose schema
@@ -339,19 +339,19 @@ ai-blog-scraper-rewriter/
 │   ├── package.json
 │   └── .env
 │
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── Header.jsx          # Navigation header
-│   │   │   ├── ArticleList.jsx     # Article grid view
-│   │   │   └── ArticleDetail.jsx   # Single article view
-│   │   ├── App.jsx                 # Main app component
-│   │   ├── main.jsx                # Entry point
-│   │   └── index.css               # Tailwind styles
-│   ├── package.json
-│   └── .env
-│
-└── README.md
+├── frontend/client/
+    ├── src/
+    │   ├── components/
+    │   │   ├── Header.jsx          # Navigation header
+    │   │   ├── ArticleList.jsx     # Article grid view
+    │   │   └── ArticleDetail.jsx   # Single article view
+    │   ├── App.jsx                 # Main app component
+    │   ├── main.jsx                # Entry point
+    │   └── index.css               # Tailwind styles
+    ├── package.json
+    └── .env
+
+   README.md
 ```
 
 ---
@@ -359,7 +359,7 @@ ai-blog-scraper-rewriter/
 ## 🌐 Live Links
 
 ### 🎨 Frontend Application
-**URL**: [https://your-frontend-url.vercel.app](https://your-frontend-url.vercel.app)
+**URL**: [https://your-frontend-url.vercel.app](https://ai-powered-blog-scraper-rewriter-pl.vercel.app)
 
 Browse and compare original vs AI-enhanced articles with a beautiful, responsive interface.
 
